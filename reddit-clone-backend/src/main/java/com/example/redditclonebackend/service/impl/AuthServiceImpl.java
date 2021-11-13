@@ -1,6 +1,7 @@
 package com.example.redditclonebackend.service.impl;
 
 import com.example.redditclonebackend.dto.RegisterRequestDTO;
+import com.example.redditclonebackend.exceptions.SpringRedditException;
 import com.example.redditclonebackend.model.NotificationEmail;
 import com.example.redditclonebackend.model.User;
 import com.example.redditclonebackend.model.VerificationToken;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -59,6 +61,34 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
+     * Business logic to verify token
+     * @param token Token Sent to user's email
+     */
+    @Override
+    public void verifyAccount(String token) {
+        Optional<VerificationToken> verificationTokenOptional = verificationTokenRepository.findByToken(token);
+
+        verificationTokenOptional.orElseThrow(()-> new SpringRedditException("Invalid Token"));
+        fetchUserAndEnable(verificationTokenOptional.get());
+    }
+
+    /**
+     * Fetches user from the provided token object and enables the user if the user exists
+     * @param verificationToken verificationToken object
+     */
+    @Transactional
+    void fetchUserAndEnable(VerificationToken verificationToken) {
+        String username = verificationToken.getUser().getUsername();
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new SpringRedditException("User not found: " + username));
+
+        // user exists and now is enabled to use the account
+        user.setEnabled(true);
+
+        userRepository.save(user);
+    }
+
+    /**
      * Generates a random token to be sent to the user in activation email and persists the token in the database.
      * @param user The user for whom the token is generated
      * @return The token
@@ -73,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
 
         // pass the token and the user to class
          verificationToken.setToken(token);
-
+         verificationToken.setUser(user);
          // save the verification token
         verificationTokenRepository.save(verificationToken);
 
