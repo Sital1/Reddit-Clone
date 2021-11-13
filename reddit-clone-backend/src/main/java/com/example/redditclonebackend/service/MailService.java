@@ -8,6 +8,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -19,9 +20,10 @@ public class MailService {
     private final MailContentBuilder mailContentBuilder;
 
     /**
-     * Builds the notification and sends the notification to the user
+     * Builds the notification and sends the notification to the user. Runs asynchronously in a separate thread to contact the mailtrap server
      * @param notificationEmail The notification email that describes sender, subject, recipient and body of email
      */
+    @Async
     public void sendEmail(NotificationEmail notificationEmail){
 
         MimeMessagePreparator messagePreparator = mimeMessage -> {
