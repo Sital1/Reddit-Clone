@@ -1,5 +1,8 @@
 package com.example.redditclonebackend.service.impl;
 
+import com.example.redditclonebackend.config.security.JwtProvider;
+import com.example.redditclonebackend.dto.AuthenticationResponseDto;
+import com.example.redditclonebackend.dto.LoginRequestDto;
 import com.example.redditclonebackend.dto.RegisterRequestDTO;
 import com.example.redditclonebackend.exceptions.SpringRedditException;
 import com.example.redditclonebackend.model.NotificationEmail;
@@ -11,13 +14,18 @@ import com.example.redditclonebackend.service.AuthService;
 import com.example.redditclonebackend.service.MailService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+
 
 @Service
 @AllArgsConstructor
@@ -25,11 +33,15 @@ public class AuthServiceImpl implements AuthService {
 
     // Lombok takes care of creating constructor.
 
+
+
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
+    private AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
     @Override
     @Transactional
@@ -73,6 +85,22 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
+     * Attemps user Login if the credentials match
+     * @param loginRequest The object containing username and password.
+     * @return
+     */
+
+    public AuthenticationResponseDto login(LoginRequestDto loginRequest) {
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        String authenticationToken = jwtProvider.generateToken(authenticate);
+        return new AuthenticationResponseDto(authenticationToken, loginRequest.getUsername());
+    }
+
+
+
+    /**
      * Fetches user from the provided token object and enables the user if the user exists
      * @param verificationToken verificationToken object
      */
@@ -80,7 +108,7 @@ public class AuthServiceImpl implements AuthService {
     void fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
 
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new SpringRedditException("User not found: " + username));
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new SpringRedditException("User not found: " + username));
 
         // user exists and now is enabled to use the account
         user.setEnabled(true);
