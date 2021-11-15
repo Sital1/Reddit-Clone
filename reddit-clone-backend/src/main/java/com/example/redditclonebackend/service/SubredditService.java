@@ -9,4 +9,6 @@ public interface SubredditService {
     SubredditDto save(SubredditDto subredditDto);
 
     List<SubredditDto> getAll();
+
+    SubredditDto getSubreddit(Long id);
 }
