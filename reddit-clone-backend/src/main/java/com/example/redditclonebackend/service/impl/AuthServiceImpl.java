@@ -1,6 +1,7 @@
 package com.example.redditclonebackend.service.impl;
 
 import com.example.redditclonebackend.config.security.JwtProvider;
+import com.example.redditclonebackend.config.security.SecurityUser;
 import com.example.redditclonebackend.dto.AuthenticationResponseDto;
 import com.example.redditclonebackend.dto.LoginRequestDto;
 import com.example.redditclonebackend.dto.RegisterRequestDTO;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,6 +117,20 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
     }
+
+    /**
+     * Returns the current user
+     * @return Current User object
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public User getCurrentUser(){
+        SecurityUser principal = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findUserByUsername(principal.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("Use name not found - " + principal.getUsername() ));
+
+    }
+
 
     /**
      * Generates a random token to be sent to the user in activation email and persists the token in the database.
