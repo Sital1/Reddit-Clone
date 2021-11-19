@@ -41,12 +41,14 @@ public class AuthController {
         return new ResponseEntity<>("Account activated successfully",OK);
     }
 
+    /**
+     * Endpoint to handle User login
+     * @param loginRequestDto The dto object containing login request
+     * @return Returns the dto containing login response.
+     */
     @PostMapping("/login")
     public AuthenticationResponseDto Login(@RequestBody LoginRequestDto loginRequestDto ){
-
         return authService.login(loginRequestDto);
-
-
     }
 
 }

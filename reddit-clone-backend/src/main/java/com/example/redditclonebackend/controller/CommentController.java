@@ -21,8 +21,8 @@ public class CommentController {
     private final CommentService commentService;
 
     /**
-     * Create a comment
-     * @return
+     * Endpoint to Create a comment.
+     * @return The response entity with status 201 created.
      */
     @PostMapping
     public ResponseEntity<Void> createComments(@RequestBody CommentsDto commentsDto){
@@ -31,15 +31,20 @@ public class CommentController {
     }
 
     /**
-     * Gets all the comments of a specific post
+     * Gets all the comments of a specific post.
      * @param id The id of the post.
-     * @return
+     * @return 200 OK status with the list of CommentsDto.
      */
     @GetMapping("by-post/{id}")
     public ResponseEntity<List<CommentsDto>> getAllCommentsForPost(@PathVariable Long id){
       return ResponseEntity.status(OK).body(commentService.getCommentsForPost(id));
     }
 
+    /**
+     *  Gets all the comments of a specific user.
+     * @param username The username of the user
+     * @return 200 OK status with the list of CommentsDto.
+     */
     @GetMapping("by-user/{username}")
     public ResponseEntity<List<CommentsDto>> getAllCommentsForUser(@PathVariable String username){
         return ResponseEntity.status(OK).body(commentService.getCommentsForUser(username));
