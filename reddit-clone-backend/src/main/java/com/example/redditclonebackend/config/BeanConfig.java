@@ -7,6 +7,7 @@ import com.example.redditclonebackend.model.Comment;
 import com.example.redditclonebackend.model.Post;
 import com.example.redditclonebackend.model.Subreddit;
 import com.example.redditclonebackend.utils.SubredditToSubredditDtoConverter;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -14,7 +15,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@AllArgsConstructor
 public class BeanConfig {
+
 
     @Bean
     public ModelMapper modelMapper(){
@@ -35,6 +38,14 @@ public class BeanConfig {
         // map username from User object to PostResponse DTO's username.
         modelMapper.typeMap(Post.class, PostResponseDto.class)
                 .addMapping(Post -> Post.getUser().getUsername(), PostResponseDto::setUsername);
+//                        .addMappings(new PropertyMap<Post, PostResponseDto>() {
+//                            @Override
+//                            protected void configure() {
+//                                using(new PostToPostResponseDtoConverter()).map(source.getCreatedDate(), destination.getDuration());
+//                            }
+//                        });
+//                .addMapping(Post -> commentRepository.findAllByPost(Post).size(), PostResponseDto::setCommentCount)
+                //.addMapping(Post -> TimeAgo.using(Post.getCreatedDate().toEpochMilli()), PostResponseDto::setDuration);
 
         // map post and username from Comment Model to CommentDto
         modelMapper.typeMap(Comment.class, CommentsDto.class)
