@@ -1,2 +1,16 @@
-package com.example.redditclonebackend.dto;public class VoteDto {
+package com.example.redditclonebackend.dto;
+
+import com.example.redditclonebackend.model.VoteType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class VoteDto {
+
+    private VoteType voteType;
+    private Long postId;
+
 }
