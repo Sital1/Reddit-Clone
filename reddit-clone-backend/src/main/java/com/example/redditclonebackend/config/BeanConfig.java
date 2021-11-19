@@ -1,7 +1,9 @@
 package com.example.redditclonebackend.config;
 
+import com.example.redditclonebackend.dto.CommentsDto;
 import com.example.redditclonebackend.dto.PostResponseDto;
 import com.example.redditclonebackend.dto.SubredditDto;
+import com.example.redditclonebackend.model.Comment;
 import com.example.redditclonebackend.model.Post;
 import com.example.redditclonebackend.model.Subreddit;
 import com.example.redditclonebackend.utils.SubredditToSubredditDtoConverter;
@@ -33,6 +35,11 @@ public class BeanConfig {
         // map username from User object to PostResponse DTO's username.
         modelMapper.typeMap(Post.class, PostResponseDto.class)
                 .addMapping(Post -> Post.getUser().getUsername(), PostResponseDto::setUsername);
+
+        // map post and username from Comment Model to CommentDto
+        modelMapper.typeMap(Comment.class, CommentsDto.class)
+                .addMapping(Comment -> Comment.getPost().getPostId(), CommentsDto::setPostId)
+                .addMapping(Comment -> Comment.getUser().getUsername() , CommentsDto::setUsername);
 
 
         return modelMapper;

@@ -16,7 +16,7 @@ public class MailContentBuilder {
      * @param message The email message
      * @return The string containg the result of evaluating the template.
      */
-    String build(String message){
+    public String build(String message){
         Context context = new Context();
         context.setVariable("message", message);
         return templateEngine.process("mailTemplate", context);
