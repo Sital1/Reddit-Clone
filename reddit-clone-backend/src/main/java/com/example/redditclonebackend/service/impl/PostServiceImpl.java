@@ -12,6 +12,7 @@ import com.example.redditclonebackend.repository.SubredditRepository;
 import com.example.redditclonebackend.repository.UserRepository;
 import com.example.redditclonebackend.service.AuthService;
 import com.example.redditclonebackend.service.PostService;
+import com.github.marlonlom.utilities.timeago.TimeAgo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -51,6 +52,8 @@ public class PostServiceImpl implements PostService {
         post.setSubreddit(subreddit);
         post.setCreatedDate(Instant.now());
         post.setUser(authService.getCurrentUser());
+        post.setCommentCount(0);
+        post.setVoteCount(0);
 
         postRepository.save(post);
 
@@ -66,7 +69,7 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto getPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with" + id.toString() + "not found"));
 
-        return modelMapper.map(post, PostResponseDto.class);
+        return mapToPostResponseDto(post);
 
     }
 
@@ -79,7 +82,7 @@ public class PostServiceImpl implements PostService {
     public List<PostResponseDto> getAllPosts() {
        return postRepository.findAll()
                 .stream()
-                .map(post -> modelMapper.map(post, PostResponseDto.class))
+                .map(post -> mapToPostResponseDto(post))
                 .collect(toList());
     }
 
@@ -94,7 +97,7 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new SubRedditNotFoundException("Subreddit with id - " + subredditId.toString() + "not found"));
       return  postRepository.findAllBySubreddit(subreddit)
               .stream()
-              .map(post -> modelMapper.map(post, PostResponseDto.class))
+              .map(post -> mapToPostResponseDto(post))
               .collect(toList());
     }
 
@@ -110,7 +113,22 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new UsernameNotFoundException("User with " + name + " not found"));
         return postRepository.findAllByUser(user)
                 .stream()
-                .map(post -> modelMapper.map(post, PostResponseDto.class))
+                .map(post -> mapToPostResponseDto(post))
                 .collect(toList());
+    }
+
+    private PostResponseDto mapToPostResponseDto(Post post){
+        return PostResponseDto.builder()
+                .postId(post.getPostId())
+                .subreddit(post.getSubreddit().getName())
+                .postName(post.getPostName())
+                .url(post.getUrl())
+                .description(post.getDescription())
+                .username(post.getUser().getUsername())
+                .voteCount(post.getVoteCount())
+                .commentCount(post.getCommentCount())
+                .duration(TimeAgo.using(post.getCreatedDate().toEpochMilli()))
+                .build();
+
     }
 }

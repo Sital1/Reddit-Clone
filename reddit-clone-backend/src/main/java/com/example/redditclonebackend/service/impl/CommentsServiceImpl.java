@@ -51,6 +51,8 @@ public class CommentsServiceImpl implements CommentService {
                 .orElseThrow(() -> new PostNotFoundException("Post with post id: " + commentsDto.getPostId()
                         + " not found."));
 
+        post.setCommentCount(post.getCommentCount()+1);
+
         Comment comment = modelMapper.map(commentsDto, Comment.class);
 
         comment.setCreatedDate(Instant.now());
