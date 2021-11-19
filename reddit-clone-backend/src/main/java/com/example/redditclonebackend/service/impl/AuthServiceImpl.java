@@ -68,6 +68,8 @@ public class AuthServiceImpl implements AuthService {
         // user verified then enable the user
 
         String token = generateVerificationToken(user);
+        System.out.println(token);
+        System.out.println("http://localhost:8080/api/auth/accountVerification/"+ token);
         mailService.sendEmail(new NotificationEmail("Please Activate Your Account", user.getEmail(), "Thankyoy for signing up" +
                 "please click on the link below to activate the account :" +
                 "http://localhost:8080/api/auth/accountVerification/"+ token));
