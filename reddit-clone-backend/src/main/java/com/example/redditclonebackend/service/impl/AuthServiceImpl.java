@@ -4,6 +4,7 @@ import com.example.redditclonebackend.config.security.JwtProvider;
 import com.example.redditclonebackend.config.security.SecurityUser;
 import com.example.redditclonebackend.dto.AuthenticationResponseDto;
 import com.example.redditclonebackend.dto.LoginRequestDto;
+import com.example.redditclonebackend.dto.RefreshTokenDto;
 import com.example.redditclonebackend.dto.RegisterRequestDTO;
 import com.example.redditclonebackend.exceptions.SpringRedditException;
 import com.example.redditclonebackend.model.NotificationEmail;
@@ -13,6 +14,7 @@ import com.example.redditclonebackend.repository.UserRepository;
 import com.example.redditclonebackend.repository.VerificationTokenRepository;
 import com.example.redditclonebackend.service.AuthService;
 import com.example.redditclonebackend.service.MailService;
+import com.example.redditclonebackend.service.RefreshTokenService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,7 +46,12 @@ public class AuthServiceImpl implements AuthService {
     private final MailService mailService;
     private AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
 
+    /**
+     * Register a new user.
+     * @param registerRequestDTO RegisterRequestDTO object that contains username and password
+     */
     @Override
     @Transactional
     public void signup(RegisterRequestDTO registerRequestDTO) {
@@ -91,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * Attemps user Login if the credentials match
      * @param loginRequest The object containing username and password.
-     * @return
+     * @return The AuhtenticationResponseDto object
      */
 
     public AuthenticationResponseDto login(LoginRequestDto loginRequest) {
@@ -99,7 +106,12 @@ public class AuthServiceImpl implements AuthService {
                 loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String authenticationToken = jwtProvider.generateToken(authenticate);
-        return new AuthenticationResponseDto(authenticationToken, loginRequest.getUsername());
+        return  AuthenticationResponseDto.builder()
+                .username(loginRequest.getUsername())
+                .authenticationToken(authenticationToken)
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTime()))
+                .build();
     }
 
 
@@ -131,6 +143,27 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.findUserByUsername(principal.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Use name not found - " + principal.getUsername() ));
 
+    }
+
+    /**
+     * Generates a new refresh token.
+     * @param refreshTokenDto The RefreshTokenDto object.
+     * @return The AuthenticationResponseDto with a generated refresh token.
+     */
+    @Override
+    public AuthenticationResponseDto refreshToken(RefreshTokenDto refreshTokenDto) {
+        // validate the current refresh token
+        refreshTokenService.validateRefreshToken(refreshTokenDto.getRefreshToken());
+
+        // only executes if the refresh token is valid.
+        String token = jwtProvider.generateTokenWithUsername(refreshTokenDto.getUsername());
+
+        return  AuthenticationResponseDto.builder()
+                .username(refreshTokenDto.getUsername())
+                .authenticationToken(token)
+                .refreshToken(refreshTokenDto.getRefreshToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTime()))
+                .build();
     }
 
 
