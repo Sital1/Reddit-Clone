@@ -1,7 +1,9 @@
-package com.example.redditclonebackend.service;
+package com.example.redditclonebackend.service.impl;
 
 import com.example.redditclonebackend.exceptions.SpringRedditException;
 import com.example.redditclonebackend.model.NotificationEmail;
+import com.example.redditclonebackend.service.MailContentBuilder;
+import com.example.redditclonebackend.service.MailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class MailService {
+public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
     private final MailContentBuilder mailContentBuilder;
@@ -23,6 +25,7 @@ public class MailService {
      * Builds the notification and sends the notification to the user. Runs asynchronously in a separate thread to contact the mailtrap server
      * @param notificationEmail The notification email that describes sender, subject, recipient and body of email
      */
+    @Override
     @Async
     public void sendEmail(NotificationEmail notificationEmail){
 

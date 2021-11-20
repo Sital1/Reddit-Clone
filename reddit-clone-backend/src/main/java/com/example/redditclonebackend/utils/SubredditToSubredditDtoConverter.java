@@ -5,6 +5,9 @@ import org.modelmapper.AbstractConverter;
 
 import java.util.List;
 
+/**
+ * A model mapper converter class that converts a postList to the size of the postList on the target.
+ */
 public class SubredditToSubredditDtoConverter extends AbstractConverter<List<Post>, Integer> {
     @Override
     public Integer convert(List<Post> postList) {

@@ -1,2 +1,8 @@
-package com.example.redditclonebackend.service;public interface MailService {
+package com.example.redditclonebackend.service;
+
+import com.example.redditclonebackend.model.NotificationEmail;
+
+public interface MailService {
+
+    void sendEmail(NotificationEmail notificationEmail);
 }

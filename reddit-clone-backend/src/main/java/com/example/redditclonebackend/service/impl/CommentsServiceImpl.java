@@ -11,8 +11,6 @@ import com.example.redditclonebackend.repository.PostRepository;
 import com.example.redditclonebackend.repository.UserRepository;
 import com.example.redditclonebackend.service.AuthService;
 import com.example.redditclonebackend.service.CommentService;
-import com.example.redditclonebackend.service.MailContentBuilder;
-import com.example.redditclonebackend.service.MailService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
@@ -35,8 +33,8 @@ public class CommentsServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final MailContentBuilder mailContentBuilder;
-    private final MailService mailService;
+    private final MailContentBuilderImpl mailContentBuilder;
+    private final MailServiceImpl mailService;
 
     //TODO: Construct POST URL
     private static final String POST_URL = "";
