@@ -17,6 +17,7 @@ import com.example.redditclonebackend.service.MailService;
 import com.example.redditclonebackend.service.RefreshTokenService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,8 +44,9 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
+    @Autowired
     private final MailService mailService;
-    private AuthenticationManager authenticationManager;
+    private final  AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
 
