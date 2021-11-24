@@ -1,0 +1,72 @@
+*{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+
+.reddit-icon-svg{
+    height: 60px;
+    padding: 8px 8px 8px 0;
+    width: 50px;
+}
+
+.login, .signup{    
+    background-color: transparent;
+    border-color: #0079D3;
+    color: #0079D3;
+    fill: #0079D3;
+    border: 1px solid;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: center;
+    letter-spacing: 1px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    line-height: 24px;
+    text-transform: uppercase;
+    padding: 3px 16px;
+    opacity: 1;  
+}
+
+.signup{
+    background-color: #0079D3;
+    border-color: #0079D3;
+    color: aliceblue;
+}
+
+.signup:hover{
+    opacity: 0.6;
+}
+
+nav{
+    background:white;
+    height: 60px;
+    width: 100%;
+
+}
+
+/* label.logo{
+    padding: 0 100px;
+} */
+
+label.logo{
+    margin-left: 20px;
+}
+
+nav ul{
+    float: right;
+    margin-right: 20px;
+    padding: 0;
+
+}
+
+nav ul li{
+    display: inline-block;
+    line-height: 60px;
+    margin: 0 5px;
+}    
+    
