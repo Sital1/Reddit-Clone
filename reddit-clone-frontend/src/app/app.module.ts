@@ -13,6 +13,13 @@ import { ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { HomeComponent } from './components/home/home.component'
 import { TokenInterceptor } from './token-interceptor.interceptor';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { PostTileComponent } from './components/shared/post-tile/post-tile.component';
+import { VoteButtonComponent } from './components/shared/vote-button/vote-button.component';
+import { SideBarComponent } from './components/shared/side-bar/side-bar.component';
+import { SubredditSideBarComponent } from './components/shared/subreddit-side-bar/subreddit-side-bar.component';
+import { CreateSubredditComponent } from './components/subreddit/create-subreddit/create-subreddit.component';
+import { CreatePostComponent } from './components/post/create-post/create-post.component';
 
 
 @NgModule({
@@ -21,7 +28,13 @@ import { TokenInterceptor } from './token-interceptor.interceptor';
     HeaderComponent,
     SignupComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    PostTileComponent,
+    VoteButtonComponent,
+    SideBarComponent,
+    SubredditSideBarComponent,
+    CreateSubredditComponent,
+    CreatePostComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +43,8 @@ import { TokenInterceptor } from './token-interceptor.interceptor';
     HttpClientModule,
     NgxWebstorageModule.forRoot(),
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    FontAwesomeModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi:true}],
   bootstrap: [AppComponent]
