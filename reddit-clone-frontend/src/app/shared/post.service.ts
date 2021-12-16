@@ -8,6 +8,7 @@ import { PostModel } from './post-model';
   providedIn: 'root'
 })
 export class PostService {
+ 
   constructor(private http: HttpClient) { }
 
   getAllPosts(): Observable<Array<PostModel>>{
@@ -16,6 +17,10 @@ export class PostService {
 
   createPost(postPayLoad:CreatePostPayload):Observable<any>{
     return this.http.post('http://localhost:8080/api/posts',postPayLoad)
+  }
+
+  getPost(postId: number):Observable<PostModel>{
+    return this.http.get<PostModel>(`http://localhost:8080/api/posts/${postId}`);
   }
 
 }
