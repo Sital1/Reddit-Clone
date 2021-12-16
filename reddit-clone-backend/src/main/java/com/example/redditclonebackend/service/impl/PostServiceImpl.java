@@ -48,13 +48,19 @@ public class PostServiceImpl implements PostService {
         Subreddit subreddit = subredditRepository.findByName(postRequestDto.getSubreddit())
                 .orElseThrow(() -> new SubRedditNotFoundException("Subreddit not found" + postRequestDto.getSubreddit()));
 
+        List<Post> posts = subreddit.getPosts();
+
+
         Post post = modelMapper.map(postRequestDto, Post.class);
         post.setSubreddit(subreddit);
+        posts.add(post);
+        subreddit.setPosts(posts);
         post.setCreatedDate(Instant.now());
         post.setUser(authService.getCurrentUser());
         post.setCommentCount(0);
         post.setVoteCount(0);
 
+       // subredditRepository.save(subreddit);
         postRepository.save(post);
 
     }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PostModel } from 'src/app/shared/post-model';
 import { PostService } from 'src/app/shared/post.service';
 import {faComments } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,7 +18,7 @@ export class PostTileComponent implements OnInit {
 
   posts$: Array<PostModel> = [];
 
-  constructor(private postService: PostService) { 
+  constructor(private postService: PostService, private router:Router) { 
     this.postService.getAllPosts()
     .subscribe(
      post => {
@@ -30,6 +31,8 @@ export class PostTileComponent implements OnInit {
   }
 
   goToPost(postId:number){
+
+    this.router.navigateByUrl('/view-post/'+postId);
 
   }
 

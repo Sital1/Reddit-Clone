@@ -8,6 +8,7 @@ import com.example.redditclonebackend.model.Post;
 import com.example.redditclonebackend.model.Subreddit;
 import com.example.redditclonebackend.utils.SubredditToSubredditDtoConverter;
 import lombok.AllArgsConstructor;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -27,6 +28,10 @@ public class BeanConfig {
     public ModelMapper modelMapper(){
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+
+
+
         modelMapper.typeMap(Subreddit.class, SubredditDto.class)
                 .addMappings(new PropertyMap<Subreddit, SubredditDto>() {
                     @Override
@@ -34,6 +39,7 @@ public class BeanConfig {
                         using(new SubredditToSubredditDtoConverter()).map(source.getPosts(),destination.getNumberOfPosts());
                     }
                 });
+
 
         // map name of subreddit from subreddit object to PostResponse DTO's subreddit.
         modelMapper.typeMap(Post.class, PostResponseDto.class)

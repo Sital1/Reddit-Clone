@@ -12,6 +12,7 @@ public class SubredditToSubredditDtoConverter extends AbstractConverter<List<Pos
     @Override
     public Integer convert(List<Post> postList) {
         if(postList != null) {
+            System.out.println("aasd");
             return postList.size();
         } else {
             return 0;

@@ -20,6 +20,9 @@ import { SideBarComponent } from './components/shared/side-bar/side-bar.componen
 import { SubredditSideBarComponent } from './components/shared/subreddit-side-bar/subreddit-side-bar.component';
 import { CreateSubredditComponent } from './components/subreddit/create-subreddit/create-subreddit.component';
 import { CreatePostComponent } from './components/post/create-post/create-post.component';
+import { ListSubredditsComponent } from './components/subreddit/list-subreddits/list-subreddits.component';
+import { EditorModule } from '@tinymce/tinymce-angular';
+import { ViewPostComponent } from './components/post/view-post/view-post.component';
 
 
 @NgModule({
@@ -34,7 +37,9 @@ import { CreatePostComponent } from './components/post/create-post/create-post.c
     SideBarComponent,
     SubredditSideBarComponent,
     CreateSubredditComponent,
-    CreatePostComponent
+    CreatePostComponent,
+    ListSubredditsComponent,
+    ViewPostComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +49,8 @@ import { CreatePostComponent } from './components/post/create-post/create-post.c
     NgxWebstorageModule.forRoot(),
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    FontAwesomeModule
+    FontAwesomeModule,
+    EditorModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi:true}],
   bootstrap: [AppComponent]

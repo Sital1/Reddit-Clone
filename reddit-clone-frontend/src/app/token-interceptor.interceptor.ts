@@ -32,14 +32,15 @@ export class TokenInterceptor implements HttpInterceptor {
                 }
             )
         }
-      return next.handle(req).pipe(catchError(error => {
-          if (error instanceof HttpErrorResponse
-              && error.status === 403) {
-              return this.handleAuthErrors(req, next);
-          } else {
-              return throwError(() => error);
-          }
-      }));
+    //   return next.handle(req).pipe(catchError(error => {
+    //       if (error instanceof HttpErrorResponse
+    //           && error.status === 403) {
+    //           return this.handleAuthErrors(req, next);
+    //       } else {
+    //           return throwError(() => error);
+    //       }
+    //   }));
+    return next.handle(req);
   }
   private handleAuthErrors(req: HttpRequest<any>, next: HttpHandler)
   : Observable<HttpEvent<any>> {

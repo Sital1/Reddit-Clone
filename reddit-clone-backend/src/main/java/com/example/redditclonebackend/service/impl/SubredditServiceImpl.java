@@ -31,8 +31,6 @@ public class SubredditServiceImpl implements SubredditService {
         Subreddit subredditModel = modelMapper.map(subredditDto, Subreddit.class);
         Subreddit save = subredditRepository.save(subredditModel);
         subredditDto.setId(save.getId());
-        subredditDto.setName("/r/"+subredditDto.getName());
-
         return subredditDto;
     }
 
@@ -50,7 +48,7 @@ public class SubredditServiceImpl implements SubredditService {
     @Override
     public SubredditDto getSubreddit(Long id) {
         Subreddit subReddit = subredditRepository.findById(id).orElseThrow(() -> new SpringRedditException("No Sub Reddit found"));
-
+        System.out.println(subReddit.getPosts().size());
         return modelMapper.map(subReddit, SubredditDto.class);
 
     }
