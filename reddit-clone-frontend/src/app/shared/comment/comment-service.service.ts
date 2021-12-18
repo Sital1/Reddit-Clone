@@ -7,7 +7,7 @@ import { CommentPayload } from './comment.payload';
   providedIn: 'root'
 })
 export class CommentService {
-  constructor(private http: HttpClient) { }
+ constructor(private http: HttpClient) { }
 
 
   getAllCommentsForPost(postId: number):Observable<Array<CommentPayload>>{
@@ -17,4 +17,9 @@ export class CommentService {
   postComment(commentPayload: CommentPayload):Observable<any>{
     return this.http.post<any>('http://localhost:8080/api/comments/',commentPayload);
   }
+
+  getAllCommentsByUser(name: string):Observable<Array<CommentPayload>> {
+    return this.http.get<Array<CommentPayload>>('http://localhost:8080/api/comments/by-user/'+name);
+  }
+
 }
