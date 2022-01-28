@@ -55,7 +55,7 @@ export class AuthService {
       { responseType: 'text' })
       .subscribe({
        next: data => {
-          console.log(data);
+    
         },
         error: error => {
           throwError(()=> error);
@@ -100,7 +100,6 @@ export class AuthService {
   }
 
   isLoggedIn(){
-    console.log(this.getJwtToken())
     return this.getJwtToken() != null;
   }
 
