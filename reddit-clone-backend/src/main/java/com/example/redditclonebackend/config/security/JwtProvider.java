@@ -99,6 +99,7 @@ public class JwtProvider {
     public boolean validateToken(String jwt){
         try
         {
+
             Jwts.parserBuilder()
                     .setSigningKey(getPublicKey())
                     .build()
@@ -106,7 +107,7 @@ public class JwtProvider {
         }catch (ExpiredJwtException | MalformedJwtException | IllegalArgumentException e)
         {
             e.printStackTrace();
-            throw new SpringRedditException("Invalid Tokenss");
+            throw new SpringRedditException("Invalid Tokenss"+ jwt);
         }
         return true;
     }
