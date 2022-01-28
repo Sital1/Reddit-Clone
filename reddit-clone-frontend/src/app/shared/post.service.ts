@@ -18,7 +18,7 @@ export class PostService {
   }
 
   createPost(postPayLoad:CreatePostPayload):Observable<any>{
-    return this.http.post(`${this.baseUrl}api/posts/`,postPayLoad)
+    return this.http.post(`${this.baseUrl}api/posts`,postPayLoad)
   }
 
   getPost(postId: number):Observable<PostModel>{
