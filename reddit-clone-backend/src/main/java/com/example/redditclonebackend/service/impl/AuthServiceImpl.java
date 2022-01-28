@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
         user.setCreated(Instant.now());
 
         // disable the user by default. Once user is validated then true.
-        user.setEnabled(false);
+        user.setEnabled(true);
 
         userRepository.save(user);
 
