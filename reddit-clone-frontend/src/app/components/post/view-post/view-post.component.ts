@@ -23,7 +23,7 @@ export class ViewPostComponent implements OnInit {
   constructor( private activatedRoute: ActivatedRoute, private postService: PostService,
     private commentService: CommentService) { 
     this.postId = this.activatedRoute.snapshot.params['id'];
-    console.log(this.postId);
+ 
     this.postService.getPost(this.postId) 
     .subscribe({
       next: data => this.post=data,
