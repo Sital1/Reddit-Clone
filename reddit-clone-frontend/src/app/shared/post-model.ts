@@ -7,5 +7,7 @@ export interface PostModel{
     url: string,
     username: string,
     voteCount: number
-    commentCount:number
+    commentCount:number,
+    upVote: boolean,
+    downVote:boolean
 }
