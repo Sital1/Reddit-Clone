@@ -39,7 +39,7 @@ public class AuthController {
      * @param token The token sent to User to verify account
      * @return Response Entity of verification result
      */
-    @GetMapping("accountVerification/{token}")
+    @GetMapping("/accountVerification/{token}")
     public ResponseEntity<String> verifyAccount(@PathVariable String token){
 
         authService.verifyAccount(token);

@@ -17,4 +17,6 @@ public interface AuthService {
     User getCurrentUser();
 
     AuthenticationResponseDto refreshToken(RefreshTokenDto refreshTokenDto);
+
+    boolean isLoggedIn();
 }

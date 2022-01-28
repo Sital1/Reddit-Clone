@@ -4,12 +4,11 @@ import com.example.redditclonebackend.dto.PostRequestDto;
 import com.example.redditclonebackend.dto.PostResponseDto;
 import com.example.redditclonebackend.exceptions.PostNotFoundException;
 import com.example.redditclonebackend.exceptions.SubRedditNotFoundException;
-import com.example.redditclonebackend.model.Post;
-import com.example.redditclonebackend.model.Subreddit;
-import com.example.redditclonebackend.model.User;
+import com.example.redditclonebackend.model.*;
 import com.example.redditclonebackend.repository.PostRepository;
 import com.example.redditclonebackend.repository.SubredditRepository;
 import com.example.redditclonebackend.repository.UserRepository;
+import com.example.redditclonebackend.repository.VoteRepository;
 import com.example.redditclonebackend.service.AuthService;
 import com.example.redditclonebackend.service.PostService;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
@@ -22,7 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
+import static com.example.redditclonebackend.model.VoteType.DOWNVOTE;
+import static com.example.redditclonebackend.model.VoteType.UPVOTE;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -36,6 +38,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private ModelMapper modelMapper;
     private final UserRepository userRepository;
+    private final VoteRepository voteRepository;
 
 
     /**
@@ -134,7 +137,27 @@ public class PostServiceImpl implements PostService {
                 .voteCount(post.getVoteCount())
                 .commentCount(post.getCommentCount())
                 .duration(TimeAgo.using(post.getCreatedDate().toEpochMilli()))
+                .upVote(isPostUpVoted(post))
+                .downVote(isPostDownVoted(post))
                 .build();
 
+    }
+
+    private boolean isPostUpVoted(Post post){
+        return checkVoteType(post, UPVOTE);
+    }
+
+    private boolean isPostDownVoted(Post post){
+        return checkVoteType(post, DOWNVOTE);
+    }
+
+    private boolean checkVoteType(Post post, VoteType voteType){
+       if(authService.isLoggedIn()){
+           Optional<Vote> voteForPostByUser = voteRepository.
+                   findTopByPostAndUserOrderByVoteIdDesc(post,authService.getCurrentUser());
+
+           return voteForPostByUser.filter(vote -> vote.getVoteType().equals(voteType)).isPresent();
+       }
+       return false;
     }
 }

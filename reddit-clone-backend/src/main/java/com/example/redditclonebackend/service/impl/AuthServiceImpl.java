@@ -1,5 +1,6 @@
 package com.example.redditclonebackend.service.impl;
 
+import com.example.redditclonebackend.config.AppConfig;
 import com.example.redditclonebackend.config.security.JwtProvider;
 import com.example.redditclonebackend.config.security.SecurityUser;
 import com.example.redditclonebackend.dto.AuthenticationResponseDto;
@@ -18,6 +19,7 @@ import com.example.redditclonebackend.service.RefreshTokenService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -49,6 +51,8 @@ public class AuthServiceImpl implements AuthService {
     private final  AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
+    private final AppConfig appConfig;
+
 
     /**
      * Register a new user.
@@ -77,11 +81,9 @@ public class AuthServiceImpl implements AuthService {
         // user verified then enable the user
 
         String token = generateVerificationToken(user);
-        System.out.println(token);
-        System.out.println("http://localhost:8080/api/auth/accountVerification/"+ token);
         mailService.sendEmail(new NotificationEmail("Please Activate Your Account", user.getEmail(), "Thankyoy for signing up" +
                 "please click on the link below to activate the account :" +
-                "http://localhost:8080/api/auth/accountVerification/"+ token));
+                appConfig.getUrl()+"/api/auth/accountVerification/"+ token));
 
     }
 
@@ -155,6 +157,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthenticationResponseDto refreshToken(RefreshTokenDto refreshTokenDto) {
         // validate the current refresh token
+        System.out.println("Refresh token" + refreshTokenDto.getRefreshToken());
         refreshTokenService.validateRefreshToken(refreshTokenDto.getRefreshToken());
 
         // only executes if the refresh token is valid.
@@ -189,5 +192,12 @@ public class AuthServiceImpl implements AuthService {
         verificationTokenRepository.save(verificationToken);
 
         return token;
+    }
+
+    public boolean isLoggedIn() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return !(authentication instanceof AnonymousAuthenticationToken)
+                && authentication.isAuthenticated();
     }
 }

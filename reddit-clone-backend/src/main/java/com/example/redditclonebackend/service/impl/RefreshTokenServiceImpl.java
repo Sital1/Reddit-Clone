@@ -30,6 +30,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public void validateRefreshToken(String token) {
+        System.out.println(token);
         refreshTokenRepository.findByToken(token)
                 .orElseThrow(()-> new SpringRedditException("Invalid token"));
     }
