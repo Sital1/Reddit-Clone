@@ -106,7 +106,7 @@ public class JwtProvider {
         }catch (ExpiredJwtException | MalformedJwtException | IllegalArgumentException e)
         {
             e.printStackTrace();
-            throw new SpringRedditException("Invalid Token");
+            throw new SpringRedditException("Invalid Tokenss");
         }
         return true;
     }

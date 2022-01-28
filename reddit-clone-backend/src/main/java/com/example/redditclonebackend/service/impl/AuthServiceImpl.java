@@ -131,7 +131,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findUserByUsername(username).orElseThrow(() -> new SpringRedditException("User not found: " + username));
 
         // user exists and now is enabled to use the account
-        user.setEnabled(true);
+        //user.setEnabled(true);
 
         userRepository.save(user);
     }
